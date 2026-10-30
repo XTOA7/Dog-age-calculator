@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dog Age Calculator — How Old is My Dog in Human Years?</title>
+<meta name="description" content="Free dog age calculator. Convert your dog's age to human years using the modern veterinary formula based on breed size. Discover your dog's life stage.">
+<!-- Replace with your Google Search Console code -->
+<meta name="google-site-verification" content="REPLACE_WITH_YOUR_CODE">
+<style>
+  :root{
+    --bg:#faf8f5; --card:#fff; --ink:#1d1d1f; --muted:#6b6b70;
+    --line:#e6e2dc; --accent:#c2410c; /* Orange theme for dogs */
+    --green:#15803d; --amber:#b45309; --red:#b91c1c;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.6;
+  }
+  .wrap{max-width:640px; margin:0 auto; padding:24px 20px 80px}
+  header{text-align:center; padding:16px 0 8px}
+  h1{font-size:1.6rem; margin:0 0 8px; letter-spacing:-0.02em}
+  .sub{color:var(--muted); font-size:.95rem; margin:0}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:22px; margin-top:22px; box-shadow:0 1px 2px rgba(0,0,0,.03)}
+  label{display:block; font-weight:600; font-size:.9rem; margin:0 0 6px}
+  .field{margin-bottom:18px}
+  input,select{
+    width:100%; padding:11px 12px; font-size:1rem; border:1px solid var(--line);
+    border-radius:9px; background:#fff; color:var(--ink); font-family:inherit;
+  }
+  input:focus,select:focus{outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent)}
+  .row{display:flex; gap:12px}
+  .row > .field{flex:1; margin-bottom:18px}
+  .hint{font-size:.8rem; color:var(--muted); margin-top:4px}
+  button{
+    width:100%; padding:14px; font-size:1.05rem; font-weight:700; border:0; border-radius:10px;
+    background:var(--accent); color:#fff; cursor:pointer; margin-top:4px; font-family:inherit;
+  }
+  button:hover{filter:brightness(1.1)}
+  button:active{transform:translateY(1px)}
+  
+  #result{display:none; margin-top:22px}
+  .result-card{border-radius:14px; padding:22px; border:1px solid #fed7aa; background:#fff7ed;}
+  .risk-label{font-size:.8rem; text-transform:uppercase; letter-spacing:.08em; font-weight:700; margin:0 0 4px; color:var(--accent)}
+  .total-age{font-size:3.5rem; font-weight:800; margin:10px 0 5px; color:var(--ink); line-height:1}
+  .human-label{font-size:1.1rem; font-weight:600; color:var(--muted); margin:0 0 18px}
+  
+  .breakdown{background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px; margin-bottom:18px}
+  .breakdown-row{display:flex; justify-content:space-between; font-size:0.9rem; padding:6px 0; border-bottom:1px dashed var(--line); color:#444}
+  .breakdown-row:last-child{border-bottom:0; padding-bottom:0}
+  .breakdown-row b{color:var(--ink)}
+  
+  .uk-note{background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:12px 14px; margin-top:14px; font-size:.85rem; color:#1e40af}
+
+  .affiliate-box{margin:32px 0; padding:18px; border:1px solid var(--line); border-radius:10px; background:#fff; text-align:center}
+  .affiliate-box p.ad-label{font-size:0.75rem; color:#fff; background:#374151; display:inline-block; padding:2px 8px; border-radius:4px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin:0 0 10px}
+  .affiliate-box h3{font-size:1.05rem; margin:0 0 8px; color:var(--ink)}
+  .affiliate-box p.desc{font-size:0.9rem; color:#444; margin:0 0 14px}
+  .affiliate-box a.btn{display:inline-block; background:#f3f4f6; color:var(--ink); text-decoration:none; padding:10px 16px; border-radius:6px; font-weight:600; font-size:0.9rem; border:1px solid #d1d5db; transition:background 0.2s}
+  .affiliate-box a.btn:hover{background:#e5e7eb}
+  .affiliate-box p.disclosure{font-size:0.7rem; color:var(--muted); margin:14px 0 0}
+
+  .content{margin-top:40px; border-top:1px solid var(--line); padding-top:28px}
+  .content h2{font-size:1.2rem; margin:28px 0 10px; letter-spacing:-0.01em}
+  .content h2:first-child{margin-top:0}
+  .content p,.content li{font-size:.95rem; color:#333}
+  .content ul{padding-left:20px}
+  .content li{margin-bottom:6px}
+  details{border-bottom:1px solid var(--line); padding:14px 0}
+  details:last-of-type{border-bottom:0}
+  summary{font-weight:600; cursor:pointer; font-size:.95rem; list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"+ "; color:var(--accent); font-weight:700}
+  details[open] summary::before{content:"− "}
+  details p{margin:10px 0 0; font-size:.92rem; color:#444}
+  .disclaimer{font-size:.8rem; color:var(--muted); margin-top:32px; padding-top:16px; border-top:1px solid var(--line); background: #fdf2f2; border-radius: 6px; padding: 12px;}
+  footer{margin-top:40px; padding-top:20px; border-top:1px solid var(--line); text-align:center; font-size:.85rem; color:var(--muted)}
+  footer a{color:var(--accent); text-decoration:none; margin:0 6px}
+  footer a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Dog Age Calculator</h1>
+    <p class="sub">Find out how old your dog is in human years based on their size.</p>
+  </header>
+
+  <div class="card">
+    <div class="field">
+      <label for="age">Your dog's age (in years)</label>
+      <input type="number" id="age" min="0" step="0.5" placeholder="e.g. 3" inputmode="decimal">
+    </div>
+
+    <div class="field">
+      <label for="size">Size of your dog</label>
+      <select id="size">
+        <option value="small">Small (Under 20 lbs / 9 kg)</option>
+        <option value="medium" selected>Medium (21–50 lbs / 9–22 kg)</option>
+        <option value="large">Large (51–90 lbs / 23–41 kg)</option>
+        <option value="giant">Giant (Over 90 lbs / 41 kg)</option>
+      </select>
+    </div>
+
+    <button id="calc">Calculate Human Age</button>
+    <p class="hint">The old "multiply by 7" rule is a myth. This tool uses modern veterinary science.</p>
+  </div>
+
+  <div id="result" aria-live="polite"></div>
+
+  <div class="affiliate-box">
+    <p class="ad-label">Ad</p>
+    <h3>Keep your dog healthy at every age</h3>
+    <p class="desc">Joint supplements and age-appropriate care essentials for senior and adult dogs.</p>
+    <a href="https://www.amazon.co.uk/YOUR-AFFILIATE-LINK-HERE" target="_blank" rel="nofollow sponsored noopener" class="btn">
+      View Dog Joint Supplements on Amazon →
+    </a>
+    <p class="disclosure">As an Amazon Associate I earn from qualifying purchases.</p>
+  </div>
+
+  <div class="content">
+    <h2>How the calculator works</h2>
+    <p>The old rule of "multiply by 7" is a myth. Dogs mature much faster than humans in their first two years. A 1-year-old dog is roughly equivalent to a 15-year-old human, and a 2-year-old dog is like a 24-year-old human.</p>
+    <p>After the age of 2, the aging process slows down, but it depends heavily on the size of the dog. Small dogs live longer and age slower (adding about 4 human years per dog year). Giant dogs age much faster (adding 6-7 human years per dog year).</p>
+
+    <h2>Life Stages at a Glance</h2>
+    <ul>
+      <li><strong>Puppy (0-1 years):</strong> Rapid growth, lots of sleep, high energy, needs training and vaccinations.</li>
+      <li><strong>Adult (1-7 years):</strong> Prime health, settled behavior, peak energy. Preventative vet care is key.</li>
+      <li><strong>Senior (7+ years):</strong> Slower pace, potential joint stiffness, weight gain, and a need for softer beds.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <details>
+      <summary>Why do small dogs live longer than large dogs?</summary>
+      <p>Veterinary science shows that larger bodies grow faster and accumulate cellular damage more quickly, leading to earlier onset of age-related diseases like arthritis and cancer. Small dogs often live to 14-16 years, while giant breeds often live 8-10 years.</p>
+    </details>
+    <details>
+      <summary>When is a dog considered a senior?</summary>
+      <p>For small and medium breeds, it's usually around 7-8 years. For large and giant breeds, they are often considered seniors by 5 or 6 years old. You should ask your vet about switching to senior food and more frequent checkups at this stage.</p>
+    </details>
+
+    <p class="disclaimer"><strong>Disclaimer:</strong> This calculator provides an estimate based on average veterinary aging data. Every dog is an individual, and genetics, diet, and lifestyle all play a role in aging. Always consult your vet for health advice.</p>
+  </div>
+
+  <footer>
+    <a href="about.html">About</a> |
+    <a href="contact.html">Contact</a> |
+    <a href="privacy.html">Privacy Policy</a> |
+    <a href="terms.html">Terms of Use</a>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var form = document.getElementById('calc');
+  var resultEl = document.getElementById('result');
+
+  form.addEventListener('click', function(){
+    var age = parseFloat(document.getElementById('age').value);
+    var size = document.getElementById('size').value;
+
+    if (isNaN(age) || age < 0) {
+      resultEl.style.display = 'block';
+      resultEl.innerHTML = '<div class="result-card" style="background:#fffbeb; border-color:#fde68a;"><p class="risk-label" style="color:#b45309;">Check inputs</p><p style="margin:0;">Please enter a valid age in years.</p></div>';
+      return;
+    }
+
+    var humanAge = 0;
+    var breakdown = "";
+
+    if (age <= 1) {
+      humanAge = age * 15;
+      breakdown = "First year of life = 15 human years.";
+    } else if (age <= 2) {
+      humanAge = 15 + ((age - 1) * 9);
+      breakdown = "Year 1 (15 human years) + Year 2 (9 human years).";
+    } else {
+      var baseAge = 24; // Age at 2 years
+      var remainingYears = age - 2;
+      var multiplier = 0;
+
+      if (size === 'small') { multiplier = 4; }
+      else if (size === 'medium') { multiplier = 5; }
+      else if (size === 'large') { multiplier = 5.5; }
+      else { multiplier = 7; } // Giant
+
+      humanAge = baseAge + (remainingYears * multiplier);
+      breakdown = "First 2 years (24 human years) + " + remainingYears + " years × " + multiplier + " aging factor.";
+    }
+
+    // Determine life stage
+    var lifeStage = "Adult";
+    var stageColor = "var(--accent)";
+    if (age < 1) { lifeStage = "Puppy"; }
+    else if (size === 'small' && age >= 10) { lifeStage = "Senior"; stageColor = "#b45309"; }
+    else if (size === 'medium' && age >= 8) { lifeStage = "Senior"; stageColor = "#b45309"; }
+    else if (size === 'large' && age >= 7) { lifeStage = "Senior"; stageColor = "#b45309"; }
+    else if (size === 'giant' && age >= 6) { lifeStage = "Senior"; stageColor = "#b45309"; }
+    else if (age < 3) { lifeStage = "Young Adult"; }
+
+    resultEl.style.display = 'block';
+    resultEl.innerHTML =
+      '<div class="result-card">' +
+        '<p class="risk-label">Estimated Human Age</p>' +
+        '<div class="total-age">' + Math.round(humanAge) + '</div>' +
+        '<p class="human-label">human years</p>' +
+        
+        '<div class="breakdown">' +
+          '<div class="breakdown-row"><span>Dog\'s actual age</span><b>' + age + ' years</b></div>' +
+          '<div class="breakdown-row"><span>Life Stage</span><b style="color:' + stageColor + ';">' + lifeStage + '</b></div>' +
+          '<div class="breakdown-row"><span>Calculation</span><b>' + breakdown + '</b></div>' +
+        '</div>' +
+
+        '<div class="uk-note"><strong>What this means:</strong> Your dog is roughly the equivalent of a <strong>' + Math.round(humanAge) + '-year-old human</strong>. ' + (lifeStage === 'Senior' ? 'At this stage, consider more frequent vet checkups and joint support.' : 'Keep up the good work with regular exercise and preventative care.') + '</div>' +
+      '</div>';
+  });
+})();
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Why do small dogs live longer than large dogs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Veterinary science shows that larger bodies grow faster and accumulate cellular damage more quickly, leading to earlier onset of age-related diseases like arthritis and cancer. Small dogs often live to 14-16 years, while giant breeds often live 8-10 years."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When is a dog considered a senior?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For small and medium breeds, it's usually around 7-8 years. For large and giant breeds, they are often considered seniors by 5 or 6 years old. You should ask your vet about switching to senior food and more frequent checkups at this stage."
+      }
+    }
+  ]
+}
+</script>
+</body>
+</html>
